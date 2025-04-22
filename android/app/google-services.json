@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "566612304598",
+    "project_id": "qr-tracker-test-210f9",
+    "storage_bucket": "qr-tracker-test-210f9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566612304598:android:595f97dbbae081e1d91f77",
+        "android_client_info": {
+          "package_name": "com.example.qr_tracker_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzdTLZuYALOhODaBYxZh6-ODDDdODulF4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
