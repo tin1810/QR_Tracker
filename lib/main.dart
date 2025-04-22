@@ -1,26 +1,61 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_tracker_app/qr_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:qr_tracker_app/firebase_service.dart';
+import 'package:qr_tracker_app/home_screen.dart';
+import 'package:qr_tracker_app/scan_confirm.dart';
+import 'package:uni_links/uni_links.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseService.initDynamicLinks();
+  await initUniLinks(); // Initialize uni_links for deep linking
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'QR Tracker',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: QRScreen(),
+      home: HomeScreen(),
+      routes: {
+        '/scan-confirmed': (context) => ScanConfirmationScreen(),
+      },
+      navigatorKey: navigatorKey,
+    );
+  }
+}
+
+// Global navigator key for deep linking
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+// Handle incoming links
+Future<void> initUniLinks() async {
+  try {
+    final initialLink = await getInitialLink();
+    if (initialLink != null) {
+      _handleDeepLink(Uri.parse(initialLink));
+    }
+
+    linkStream.listen((String? link) {
+      if (link != null) _handleDeepLink(Uri.parse(link));
+    });
+  } catch (e) {
+    print('Error initializing uni_links: $e');
+  }
+}
+
+void _handleDeepLink(Uri uri) {
+  final qrId = uri.queryParameters['id'];
+  if (qrId != null) {
+    navigatorKey.currentState?.pushNamed(
+      '/scan-confirmed',
+      arguments: qrId,
     );
   }
 }
